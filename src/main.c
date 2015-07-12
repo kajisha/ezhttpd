@@ -1,10 +1,20 @@
 #include <stdio.h>
-#include "tcp_server.h"
+
+#include "http_server.h"
+
+extern HttpResponse *handler(const HttpRequest*);
+
+HttpResponse *handler(const HttpRequest *request) {
+  printf("HTTP method -> %s\n", request->method);
+  printf("HTTP path -> %s\n", request->path);
+
+  return NULL;
+}
 
 int main() {
-
-  tcp_server(&(TcpServer) {
-    .port_no = 8000
+  http_server(&(HttpServer) {
+    .tcp.port_no = 8000,
+    .handle = handler
   });
 
   return 0;
