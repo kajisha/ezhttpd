@@ -9,7 +9,8 @@ typedef struct HttpRequest {
   char *method;
   char *path;
   char *http_version;
-  FILE *stream;
+  FILE *input_stream;
+  FILE *output_stream;
 } HttpRequest;
 
 typedef struct HttpResponse {

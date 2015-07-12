@@ -2,9 +2,8 @@
 
 #include "http_server.h"
 
-extern HttpResponse *handler(const HttpRequest*);
-
 HttpResponse *handler(const HttpRequest *request) {
+  printf("HTTP version -> %s\n", request->http_version);
   printf("HTTP method -> %s\n", request->method);
   printf("HTTP path -> %s\n", request->path);
 
