@@ -8,8 +8,8 @@
 typedef struct HttpRequest {
   char *method;
   char *path;
-  FILE *in;
-  FILE *out;
+  char *http_version;
+  FILE *stream;
 } HttpRequest;
 
 typedef struct HttpResponse {
