@@ -20,7 +20,7 @@ typedef struct TcpServer {
   int (*initialize)(struct TcpServer*);
   int (*listen)(struct TcpServer*);
   int (*wait_on_receive)(struct TcpServer*);
-  void (*on_receive)(const struct TcpServer*, const char*);
+  void (*on_receive)(const struct TcpServer*, int);
 
 } TcpServer;
 
