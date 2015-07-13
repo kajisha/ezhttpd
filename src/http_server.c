@@ -57,7 +57,7 @@ static inline const char *http_response_status_code(const enum http_response_cod
 
 static inline void http_response_renderer(const HttpRequest *request, const HttpResponse *response) {
   fprintf(request->output_stream, "%s %d %s\r\n", request->http_version, response->status, response->status_code(response->status));
-  fprintf(request->output_stream, "Content-Type: text/html; charset=""UTF-8""");
+  fprintf(request->output_stream, "Content-Type: text/html; charset=\"UTF-8\"\r\n");
   if (response->body) {
     fprintf(request->output_stream, "Content-Length: %d\r\n", response->content_length(response));
   }
