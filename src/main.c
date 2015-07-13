@@ -49,7 +49,8 @@ static FILE *content_open(char *pathname) {
 
 HttpResponse *handler(const HttpRequest *request) {
   char pathname[PATH_MAX];
-  snprintf(pathname, sizeof(pathname), "%s/%s", DOCROOT, request->path);
+  char *absolute_path = NULL;
+  snprintf(pathname, sizeof(pathname), "%s/%s", DOCROOT, realpath(request->path, absolute_path));
 
   FILE *content_stream = content_open(pathname);
   if (content_stream == NULL) {
