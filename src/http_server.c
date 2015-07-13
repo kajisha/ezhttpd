@@ -6,7 +6,7 @@
 
 static void on_receive(const TcpServer *, int);
 static void process_http_request(HttpServer *, HttpRequest *);
-static void read_http_request(HttpRequest*);
+static void read_http_request(HttpRequest *);
 static void write_http_response(const HttpRequest *, const HttpResponse *);
 static void destroy_http_request(HttpRequest *);
 
