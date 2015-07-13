@@ -4,7 +4,7 @@
 #include "tcp_server.h"
 #include "http_server.h"
 
-static void on_receive(const TcpServer*, int);
+static void on_receive(const TcpServer *, int);
 static void process_http_request(HttpServer *, HttpRequest *);
 static void read_http_request(HttpRequest*);
 static void write_http_response(const HttpRequest *, const HttpResponse *);
@@ -55,19 +55,19 @@ static inline const char *http_response_status_code(const enum http_response_cod
   return NULL;
 }
 
-static inline void http_response_renderer(const HttpRequest *request, const HttpResponse *response) {
-  fprintf(request->output_stream, "%s %d %s\r\n", request->http_version, response->status, response->status_code(response->status));
-  fprintf(request->output_stream, "Content-Type: text/html; charset=\"UTF-8\"\r\n");
+static inline void http_response_renderer(const HttpRequest *self, const HttpResponse *response) {
+  fprintf(self->output_stream, "%s %d %s\r\n", self->http_version, response->status, response->status_code(response->status));
+  fprintf(self->output_stream, "Content-Type: text/html; charset=\"UTF-8\"\r\n");
   if (response->body) {
-    fprintf(request->output_stream, "Content-Length: %d\r\n", response->content_length(response));
+    fprintf(self->output_stream, "Content-Length: %d\r\n", response->content_length(response));
   }
-  fprintf(request->output_stream, "\r\n");
+  fprintf(self->output_stream, "\r\n");
 
   if (response->body) {
-    fprintf(request->output_stream, "%s\r\n", response->body);
-    fprintf(request->output_stream, "\r\n");
+    fprintf(self->output_stream, "%s\r\n", response->body);
+    fprintf(self->output_stream, "\r\n");
   }
-  fflush(request->output_stream);
+  fflush(self->output_stream);
 }
 
 static char *chomp(char *str) {
@@ -78,8 +78,8 @@ static char *chomp(char *str) {
   return head;
 }
 
-static void on_receive(const TcpServer* tcp, int socket) {
-  process_http_request((HttpServer* )tcp, &(HttpRequest) {
+static void on_receive(const TcpServer *self, int socket) {
+  process_http_request((HttpServer *)self, &(HttpRequest) {
     .input_stream = fdopen(socket, "r"),
     .output_stream = fdopen(socket, "w")
   });

@@ -13,12 +13,12 @@
 
 #include "tcp_server.h"
 
-static int initialize_tcp_server(TcpServer*);
-static int listen_tcp_server(TcpServer*);
-static int wait_on_receive_tcp_server(TcpServer*);
-static void on_receive_tcp_server(const TcpServer*, int);
-static void *default_tcp_server(TcpServer*, const TcpServer*);
-static void *acceptor(TcpServer*);
+static int initialize_tcp_server(TcpServer *);
+static int listen_tcp_server(TcpServer *);
+static int wait_on_receive_tcp_server(TcpServer *);
+static void on_receive_tcp_server(const TcpServer *, int);
+static void *default_tcp_server(TcpServer *, const TcpServer *);
+static void *acceptor(TcpServer *);
 
 const TcpServer DEFAULT_TCP_SERVER = {
   .initialize = initialize_tcp_server,
@@ -27,11 +27,11 @@ const TcpServer DEFAULT_TCP_SERVER = {
   .on_receive = on_receive_tcp_server
 };
 
-void *tcp_server(TcpServer* server) {
+void *tcp_server(TcpServer *server) {
   return default_tcp_server(server, &DEFAULT_TCP_SERVER);
 }
 
-static void *default_tcp_server(TcpServer* server, const TcpServer* default_server) {
+static void *default_tcp_server(TcpServer *server, const TcpServer *default_server) {
 #define MERGE_ARG(member) (server->member ? server : default_server)->member
   server->port_no = MERGE_ARG(port_no);
   server->initialize = MERGE_ARG(initialize);
@@ -43,7 +43,7 @@ static void *default_tcp_server(TcpServer* server, const TcpServer* default_serv
 #undef MERGE_ARG
 }
 
-static void *acceptor(TcpServer* server) {
+static void *acceptor(TcpServer *server) {
   server->initialize(server);
 
   server->listen(server);
@@ -72,7 +72,7 @@ static void *acceptor(TcpServer* server) {
   return NULL;
 }
 
-static int initialize_tcp_server(TcpServer* server) {
+static int initialize_tcp_server(TcpServer *server) {
   server->socket = socket(AF_INET, SOCK_STREAM, 0);
 
   server->addr = (struct sockaddr_in) {
@@ -93,7 +93,7 @@ static int initialize_tcp_server(TcpServer* server) {
   return 0;
 }
 
-static int listen_tcp_server(TcpServer* server) {
+static int listen_tcp_server(TcpServer *server) {
   if (bind(server->socket, (struct sockaddr *)&server->addr, sizeof(server->addr)) != 0) {
     perror("bind");
 
@@ -109,7 +109,7 @@ static int listen_tcp_server(TcpServer* server) {
   return 0;
 }
 
-static int wait_on_receive_tcp_server(TcpServer* server) {
+static int wait_on_receive_tcp_server(TcpServer *server) {
   struct sockaddr_in addr;
   int addr_len = sizeof(addr);
   int client_socket = accept(server->socket, (struct sockaddr *)&addr, (socklen_t *restrict)&addr_len);
@@ -121,5 +121,5 @@ static int wait_on_receive_tcp_server(TcpServer* server) {
   return client_socket;
 }
 
-static void on_receive_tcp_server(const TcpServer* server, int socket) {
+static void on_receive_tcp_server(const TcpServer *server, int socket) {
 }

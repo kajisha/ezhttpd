@@ -13,7 +13,7 @@
 char *DOCROOT = "./public";
 
 // @see http://www.ipa.go.jp/security/awareness/vendor/programmingv2/contents/c803.html
-static FILE* content_open(char *pathname) {
+static FILE *content_open(char *pathname) {
   struct stat lstat_result, fstat_result;
 
   if (lstat(pathname, &lstat_result) != 0) {
