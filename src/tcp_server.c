@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <signal.h>
 
 #include <stdint.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 
 #include <arpa/inet.h>
@@ -72,7 +74,25 @@ static void *acceptor(TcpServer *server) {
   return NULL;
 }
 
+static void signal_handler(int signo) {
+  for (pid_t child_pid = 0; child_pid > 0;) {
+    int retval = 0;
+    child_pid = waitpid(-1, &retval, WNOHANG);
+  }
+}
+
+static void setup_signal_handler() {
+  struct sigaction action;
+
+  action.sa_handler = signal_handler;
+  sigemptyset(&action.sa_mask);
+  action.sa_flags = SA_NOCLDSTOP | SA_RESTART;
+  sigaction(SIGCHLD, &action, NULL);
+}
+
 static int initialize_tcp_server(TcpServer *server) {
+  setup_signal_handler();
+
   server->socket = socket(AF_INET, SOCK_STREAM, 0);
 
   server->addr = (struct sockaddr_in) {
